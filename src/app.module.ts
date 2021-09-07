@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -15,12 +15,11 @@ import { UsersModule } from './users/users.module';
       username: process.env.TYPEORM_USERNAME,
       password: process.env.TYPEORM_PASSWORD,
       database: process.env.TYPEORM_DATABASE,
-      entities: [__dirname + '/../**/*.model*{.ts,.js}'],
-      migrations: [__dirname + '/../migration/*{.ts,.js}'],
-      synchronize: Boolean(process.env.TYPEORM_SYNCHRONIZE),
-      logging: Boolean(process.env.TYPEORM_LOGGING)
+      entities: [join(__dirname, '**', '*.entity*{.ts,.js}')],
+      migrations: [join(__dirname, '**', '/migrations/*{.ts,.js}')],
+      synchronize: process.env.TYPEORM_SYNCHRONIZE === 'true',
+      logging: process.env.TYPEORM_LOGGING === 'true'
     }),
-    UsersModule
   ],
   controllers: [AppController],
   providers: [AppService],
