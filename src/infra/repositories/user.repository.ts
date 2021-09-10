@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { ILike, Repository } from "typeorm";
+import { ILike, Not, Repository } from "typeorm";
 import { UserModel } from "../models/user.model";
 
 
@@ -81,6 +81,19 @@ export class UserRepository {
       return;
     } catch {
       throw new Error(`Wasn't possible remove the user with the given id`);
+    }
+  }
+
+  async checkCref(cref: string, id?: string): Promise<number> {
+    try {
+      const where = [];
+
+      where.push({
+        ...(cref && id ? { id: Not(id), cref: cref } : { cref: cref }),
+      })
+      return await this.userRepository.count({ where });
+    } catch {
+      throw new Error(`Could not find a CREF`);
     }
   }
 }

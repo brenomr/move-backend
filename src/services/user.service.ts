@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { PaginationDTO } from 'src/dtos/pagination.dto';
 import { UserDTO } from 'src/dtos/user.dto';
 import { UserResponseDTO } from 'src/dtos/user.response.dto';
@@ -15,7 +15,16 @@ export class UserService {
     private readonly userRepository: UserRepository
   ) {}
 
+  async checkCref(cref: string, id?: string) {
+    const result = await this.userRepository.checkCref(cref, id);
+    if(result) {
+      throw new ConflictException(`CREF already in use`);
+    }
+  }
+
   async create(userDTO: UserDTO) {
+    await this.checkCref(userDTO.cref);
+
     const newUser = autoMapper(UserModel, userDTO, false);
     
     const savedUser = await this.userRepository.create(newUser);
@@ -58,6 +67,7 @@ export class UserService {
 
   async update(id: string, userUpdateDTO: UserUpdateDTO) {
     await this.findOne(id);
+    await this.checkCref(userUpdateDTO.cref, userUpdateDTO.id);
 
     const userToUpdate = autoMapper(UserModel, userUpdateDTO, false);
 
