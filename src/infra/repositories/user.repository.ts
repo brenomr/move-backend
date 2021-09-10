@@ -96,4 +96,17 @@ export class UserRepository {
       throw new Error(`Could not find a CREF`);
     }
   }
+
+  async checkEmail(email: string, id?: string): Promise<number> {
+    try {
+      const where = [];
+
+      where.push({
+        ...(email && id ? { id: Not(id), email: email } : { email: email }),
+      })
+      return await this.userRepository.count({ where });
+    } catch {
+      throw new Error(`Could not find an email`);
+    }
+  }
 }

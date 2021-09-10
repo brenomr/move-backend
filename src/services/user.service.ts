@@ -22,8 +22,16 @@ export class UserService {
     }
   }
 
+  async checkEmail(email: string, id?: string) {
+    const result = await this.userRepository.checkEmail(email, id);
+    if(result) {
+      throw new ConflictException(`Email already in use`);
+    }
+  }
+
   async create(userDTO: UserDTO) {
     await this.checkCref(userDTO.cref);
+    await this.checkEmail(userDTO.email);
 
     const newUser = autoMapper(UserModel, userDTO, false);
     
@@ -68,6 +76,7 @@ export class UserService {
   async update(id: string, userUpdateDTO: UserUpdateDTO) {
     await this.findOne(id);
     await this.checkCref(userUpdateDTO.cref, userUpdateDTO.id);
+    await this.checkEmail(userUpdateDTO.email, userUpdateDTO.id);
 
     const userToUpdate = autoMapper(UserModel, userUpdateDTO, false);
 
