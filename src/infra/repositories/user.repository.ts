@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { ILike, Repository } from "typeorm";
 import { UserModel } from "../models/user.model";
 
 
@@ -24,11 +24,33 @@ export class UserRepository {
     }
   }
 
-  async findAll(): Promise<{data: UserModel[], total: number}> {
+  async findAll(
+    limit: number,
+    skip: number,
+    orderBy: string,
+    order: string,
+    name: string,
+    email: string,
+    phone: string,
+  ): Promise<{ users: UserModel[], total: number }> {
     try{
-      const result = await this.userRepository.findAndCount();
+      const where = [];
 
-      return { data: result[0], total: result[1] };
+      where.push({
+        ...(name ? { name: ILike(`%${name}%`) } : {}),
+        ...(email ? { email: ILike(`%${email}%`) } : {}),
+        ...(phone ? { phone: ILike(`%${phone}%`) } : {}),
+      });
+
+      const result = await this.userRepository.findAndCount({
+        take: limit,
+        skip,
+        order: {
+          [orderBy]: order
+        },
+        where,
+      });
+      return { users: result[0], total: result[1] };
     } catch {
       throw new Error(`Wasn't possible to list users`);
     }
