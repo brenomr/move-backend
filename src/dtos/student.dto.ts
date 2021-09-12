@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Type } from 'class-transformer';
 import { IsBoolean, IsNotEmpty, IsOptional, IsString, IsUUID, MaxLength } from 'class-validator';
-import { UserDTO } from './user.dto';
+import { UserDTO, UserToRelationDTO } from './user.dto';
 
 export class StudentDTO {
 
@@ -161,14 +161,14 @@ export class StudentDTO {
 
   @ApiProperty({
     required: true,
-    type: [UserDTO],
+    type: [UserToRelationDTO],
     example: [
       { 'id': '77d04f2c-fde5-42f5-8ca1-7178bb4aca15' },
       { 'id': 'a4db6f33-5d2e-40fe-8a05-c989a4c38541' }
     ]
   })
   @IsNotEmpty()
-  @Type(() => UserDTO)
+  @Type(() => UserToRelationDTO)
   @Expose()
-  personals: UserDTO[];
+  personals: UserToRelationDTO[];
 }

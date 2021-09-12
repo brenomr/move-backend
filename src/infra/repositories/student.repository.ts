@@ -17,8 +17,9 @@ export class StudentRepository {
       const newStudent = this.studentRepository.create(data);
 
       await this.studentRepository.save(newStudent);
+      const createdStudent = await this.studentRepository.findOneOrFail(newStudent.id);
 
-      return newStudent;
+      return createdStudent;
     } catch {
       throw new Error(`Wasn't possible to create a new student`)
     }
