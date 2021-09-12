@@ -1,7 +1,8 @@
 
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import { Column, Entity, ManyToMany, PrimaryColumn } from "typeorm";
 import { v4 as uuid } from 'uuid';
 import { Base } from "./base.model";
+import { StudentModel } from "./student.model";
 
 @Entity({
   name: 'users'
@@ -107,4 +108,7 @@ export class UserModel extends Base {
     length: 40,
   })
   nickname: string;
+
+  @ManyToMany(() => StudentModel, student => student.personals)
+  students: StudentModel[];
 }
