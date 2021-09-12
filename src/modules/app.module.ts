@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
 import { AppController } from '../controllers/app.controller';
 import { AppService } from '../services/app.service';
+import { ActivityModule } from './activity.module';
 import { StudentModule } from './student.module';
 import { UserModule } from './user.module';
 
@@ -22,6 +23,7 @@ import { UserModule } from './user.module';
       synchronize: process.env.TYPEORM_SYNCHRONIZE === 'true',
       logging: process.env.TYPEORM_LOGGING === 'true',
     }),
+    ActivityModule,
     StudentModule,
     UserModule,
   ],
