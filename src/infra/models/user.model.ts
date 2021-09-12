@@ -1,6 +1,7 @@
 
-import { Column, Entity, ManyToMany, PrimaryColumn } from "typeorm";
+import { Column, Entity, ManyToMany, OneToMany, PrimaryColumn } from "typeorm";
 import { v4 as uuid } from 'uuid';
+import { ActivityModel } from "./activity.model";
 import { Base } from "./base.model";
 import { StudentModel } from "./student.model";
 
@@ -111,4 +112,7 @@ export class UserModel extends Base {
 
   @ManyToMany(() => StudentModel, student => student.personals)
   students: StudentModel[];
+
+  @OneToMany(() => ActivityModel, activity => activity.user)
+  activities: ActivityModel[];
 }
