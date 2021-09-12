@@ -17,8 +17,9 @@ export class UserRepository {
       const newUser = this.userRepository.create(data);
 
       await this.userRepository.save(newUser);
+      const createdUser = await this.userRepository.findOneOrFail(newUser.id);
 
-      return newUser;
+      return createdUser;
     } catch {
       throw new Error(`Wasn't possible to create a new user`)
     }
