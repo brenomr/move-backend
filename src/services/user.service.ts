@@ -82,7 +82,7 @@ export class UserService {
 
     const updatedUser = await this.userRepository.update(id, userToUpdate);
 
-    return updatedUser;
+    return autoMapper(UserResponseDTO, updatedUser);;
   }
 
   async remove(id: string) {

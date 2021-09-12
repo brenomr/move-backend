@@ -73,7 +73,7 @@ export class StudentService {
 
     const updatedStudent = await this.studentRepository.update(id, studentToUpdate);
 
-    return updatedStudent;
+    return autoMapper(StudentResponseDTO, updatedStudent);
   }
 
   async remove(id: string) {
