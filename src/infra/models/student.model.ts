@@ -1,6 +1,7 @@
 
-import { Column, Entity, JoinTable, ManyToMany, PrimaryColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryColumn } from "typeorm";
 import { v4 as uuid } from 'uuid';
+import { AssessmentModel } from "./assessment.model";
 import { Base } from "./base.model";
 import { UserModel } from "./user.model";
 
@@ -104,4 +105,7 @@ export class StudentModel extends Base {
   })
   @JoinTable()
   personals: UserModel[];
+
+  @OneToMany(() => AssessmentModel, assessment => assessment.student)
+  assessments: AssessmentModel[];
 }

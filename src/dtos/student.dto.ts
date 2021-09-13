@@ -172,3 +172,16 @@ export class StudentDTO {
   @Expose()
   personals: UserToRelationDTO[];
 }
+
+export class StudentToRelationDTO {
+
+  @ApiProperty({
+    required: true,
+    type: 'uuid',
+    example: 'd0fa98cb-d225-4ef3-bc32-c39c7be56fb1'
+  })
+  @IsNotEmpty()
+  @IsUUID()
+  @Expose()
+  id: string;
+}
