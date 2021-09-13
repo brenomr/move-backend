@@ -6,6 +6,7 @@ import { AppController } from '../controllers/app.controller';
 import { AppService } from '../services/app.service';
 import { ActivityModule } from './activity.module';
 import { AssessmentModule } from './assessment.module';
+import { ExerciseModule } from './exercise.module';
 import { StudentModule } from './student.module';
 import { UserModule } from './user.module';
 
@@ -26,6 +27,7 @@ import { UserModule } from './user.module';
     }),
     ActivityModule,
     AssessmentModule,
+    ExerciseModule,
     StudentModule,
     UserModule,
   ],
