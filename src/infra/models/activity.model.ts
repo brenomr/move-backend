@@ -1,7 +1,8 @@
 
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryColumn } from "typeorm";
 import { v4 as uuid } from 'uuid';
 import { Base } from "./base.model";
+import { ExerciseModel } from "./exercise.model";
 import { UserModel } from "./user.model";
 
 @Entity({
@@ -36,4 +37,7 @@ export class ActivityModel extends Base {
     eager: true,
   })
   user: UserModel;
+
+  @OneToMany(() => ExerciseModel, exercise => exercise.activity)
+  exercises: ExerciseModel[];
 }

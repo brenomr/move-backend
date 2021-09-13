@@ -4,6 +4,7 @@ import { v4 as uuid } from 'uuid';
 import { ActivityModel } from "./activity.model";
 import { AssessmentModel } from "./assessment.model";
 import { Base } from "./base.model";
+import { ExerciseModel } from "./exercise.model";
 import { StudentModel } from "./student.model";
 
 @Entity({
@@ -119,4 +120,7 @@ export class UserModel extends Base {
 
   @OneToMany(() => AssessmentModel, assessment => assessment.personal)
   assessments: AssessmentModel[];
+
+  @OneToMany(() => ExerciseModel, exercise => exercise.personal)
+  exercises: ExerciseModel[];
 }
