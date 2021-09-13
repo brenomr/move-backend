@@ -5,6 +5,7 @@ import { join } from 'path';
 import { AppController } from '../controllers/app.controller';
 import { AppService } from '../services/app.service';
 import { ActivityModule } from './activity.module';
+import { AssessmentModule } from './assessment.module';
 import { StudentModule } from './student.module';
 import { UserModule } from './user.module';
 
@@ -24,6 +25,7 @@ import { UserModule } from './user.module';
       logging: process.env.TYPEORM_LOGGING === 'true',
     }),
     ActivityModule,
+    AssessmentModule,
     StudentModule,
     UserModule,
   ],
