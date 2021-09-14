@@ -8,6 +8,7 @@ import { ActivityModule } from './activity.module';
 import { AssessmentModule } from './assessment.module';
 import { ExerciseModule } from './exercise.module';
 import { StudentModule } from './student.module';
+import { TrainingModule } from './training.module';
 import { UserModule } from './user.module';
 
 @Module({
@@ -29,6 +30,7 @@ import { UserModule } from './user.module';
     AssessmentModule,
     ExerciseModule,
     StudentModule,
+    TrainingModule,
     UserModule,
   ],
   controllers: [AppController],
