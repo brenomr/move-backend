@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Type } from 'class-transformer';
-import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import { IsNotEmpty, IsString, IsUUID, MaxLength } from 'class-validator';
 import { ActivityToRelationDTO } from './activity.dto';
 import { UserToRelationDTO } from './user.dto';
 
@@ -58,4 +58,17 @@ export class ExerciseDTO {
   @Type(() => ActivityToRelationDTO)
   @Expose()
   activity: ActivityToRelationDTO;
+}
+
+export class ExerciseToRelationDTO {
+
+  @ApiProperty({
+    required: true,
+    type: 'uuid',
+    example: '58bf3a0d-accd-44f8-880d-ee911e1dc66c'
+  })
+  @IsNotEmpty()
+  @IsUUID()
+  @Expose()
+  id: string;
 }
