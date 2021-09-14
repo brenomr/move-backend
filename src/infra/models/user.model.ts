@@ -6,6 +6,7 @@ import { AssessmentModel } from "./assessment.model";
 import { Base } from "./base.model";
 import { ExerciseModel } from "./exercise.model";
 import { StudentModel } from "./student.model";
+import { TrainingModel } from "./training.model";
 
 @Entity({
   name: 'users'
@@ -123,4 +124,7 @@ export class UserModel extends Base {
 
   @OneToMany(() => ExerciseModel, exercise => exercise.personal)
   exercises: ExerciseModel[];
+
+  @OneToMany(() => TrainingModel, training => training.personal)
+  trainings: TrainingModel[];
 }
