@@ -3,6 +3,7 @@ import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryColumn } from 
 import { v4 as uuid } from 'uuid';
 import { AssessmentModel } from "./assessment.model";
 import { Base } from "./base.model";
+import { CourseModel } from "./course.model";
 import { UserModel } from "./user.model";
 
 @Entity({
@@ -108,4 +109,7 @@ export class StudentModel extends Base {
 
   @OneToMany(() => AssessmentModel, assessment => assessment.student)
   assessments: AssessmentModel[];
+
+  @OneToMany(() => CourseModel, course => course.student)
+  courses: CourseModel[];
 }
