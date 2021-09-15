@@ -5,7 +5,9 @@ import { Base } from "./base.model";
 import { StudentModel } from "./student.model";
 import { UserModel } from "./user.model";
 
-@Entity()
+@Entity({
+  name: 'assessments'
+})
 export class AssessmentModel extends Base {
 
   @PrimaryColumn({
