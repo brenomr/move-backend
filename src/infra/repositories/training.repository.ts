@@ -65,7 +65,7 @@ export class TrainingRepository {
       });
     } catch {
       throw new NotFoundException(
-        `Wasn't possible to find an exercise with the given id`
+        `Wasn't possible to find a training with the given id`
       );
     }
   }
