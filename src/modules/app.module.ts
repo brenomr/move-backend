@@ -11,6 +11,7 @@ import { StudentModule } from './student.module';
 import { CourseModule } from './course.module';
 import { TrainingModule } from './training.module';
 import { UserModule } from './user.module';
+import { PresenceModule } from './presence.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { UserModule } from './user.module';
     AssessmentModule,
     CourseModule,
     ExerciseModule,
+    PresenceModule,
     StudentModule,
     TrainingModule,
     UserModule,
