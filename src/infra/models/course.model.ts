@@ -1,7 +1,8 @@
 
-import { Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryColumn } from "typeorm";
 import { v4 as uuid } from 'uuid';
 import { Base } from "./base.model";
+import { PresenceModel } from "./presence.model";
 import { StudentModel } from "./student.model";
 import { TrainingModel } from "./training.model";
 
@@ -40,4 +41,7 @@ export class CourseModel extends Base {
     eager: true,
   })
   training: TrainingModel;
+
+  @OneToMany(() => PresenceModel, presence => presence.course)
+  presences: PresenceModel[];
 }
