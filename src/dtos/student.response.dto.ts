@@ -34,13 +34,6 @@ export class StudentResponseDTO {
 
   @ApiProperty({
     format: 'string',
-    example: 'minhasenhasecreta'
-  })
-  @Expose()
-  password: string;
-
-  @ApiProperty({
-    format: 'string',
     example: 'Rua 13 de Maio'
   })
   @Expose()

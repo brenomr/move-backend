@@ -40,13 +40,6 @@ export class UserResponseDTO {
 
   @ApiProperty({
     format: 'string',
-    example: 'T5bal:3sL1-#'
-  })
-  @Expose()
-  password: string;
-
-  @ApiProperty({
-    format: 'string',
     example: 'CREF123456PSP'
   })
   @Expose()
