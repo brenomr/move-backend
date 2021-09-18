@@ -1,4 +1,5 @@
 import { ConflictException, Injectable } from '@nestjs/common';
+import { hash } from 'bcryptjs';
 import { PaginationDTO } from 'src/dtos/pagination.dto';
 import { UserDTO } from 'src/dtos/user.dto';
 import { UserResponseDTO } from 'src/dtos/user.response.dto';
@@ -32,6 +33,8 @@ export class UserService {
   async create(userDTO: UserDTO) {
     await this.checkCref(userDTO.cref);
     await this.checkEmail(userDTO.email);
+
+    userDTO.password = await hash(userDTO.password, 8);
 
     const newUser = autoMapper(UserModel, userDTO, false);
     

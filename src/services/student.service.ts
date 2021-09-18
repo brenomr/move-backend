@@ -1,4 +1,5 @@
 import { ConflictException, Injectable } from '@nestjs/common';
+import { hash } from 'bcryptjs';
 import { PaginationDTO } from 'src/dtos/pagination.dto';
 import { StudentDTO } from 'src/dtos/student.dto';
 import { StudentResponseDTO } from 'src/dtos/student.response.dto';
@@ -24,6 +25,8 @@ export class StudentService {
 
   async create(studentDTO: StudentDTO) {
     await this.checkEmail(studentDTO.email);
+
+    studentDTO.password = await hash(studentDTO.password, 8);
 
     const newStudent = autoMapper(StudentModel, studentDTO, false);
     
