@@ -51,7 +51,8 @@ export class ActivityService {
   }
 
   async findOne(id: string) {
-    return await this.activityRepositoty.findOne(id);
+    const activity = await this.activityRepositoty.findOne(id);
+    return autoMapper(ActivityResponseDTO, activity);
   }
 
   async update(id: string, activityUpdateDTO: ActivityUpdateDTO) {
