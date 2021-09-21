@@ -33,6 +33,7 @@ export class CourseRepository {
     description: string,
     startDate: string,
     endDate: string,
+    student: string,
     student_name: string,
     training_title: string,
   ): Promise<{ courses: CourseModel[], total: number }> {
@@ -43,6 +44,7 @@ export class CourseRepository {
         ...(description ? { description: ILike(`%${description}%`) } : {}),
         ...(startDate ? { startDate: startDate } : {}),
         ...(endDate ? { endDate: endDate } : {}),
+        ...(student ? { student: { id: student } } : {}),
         ...(student_name ? { student: { name: ILike(`%${student_name}%`) } } : {}),
         ...(training_title ? { trainings: { title: ILike(`%${training_title}%`) } } : {}),
       });

@@ -48,6 +48,8 @@ export class CourseController {
     startDate: string,
     @Query('endDate')
     endDate: string,
+    @Query('student')
+    student: string,
     @Query('student_name')
     student_name: string,
     @Query('training_title')
@@ -58,6 +60,7 @@ export class CourseController {
       description,
       startDate,
       endDate,
+      student,
       student_name,
       training_title,
     );

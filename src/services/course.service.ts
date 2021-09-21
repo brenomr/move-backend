@@ -27,6 +27,7 @@ export class CourseService {
     description: string,
     startDate: string,
     endDate: string,
+    student: string,
     student_name: string,
     training_title: string,
   ) {
@@ -46,6 +47,7 @@ export class CourseService {
       description,
       startDate,
       endDate,
+      student,
       student_name,
       training_title,
     );
