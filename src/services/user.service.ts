@@ -76,6 +76,10 @@ export class UserService {
     return await this.userRepository.findOne(id);
   }
 
+  async findByEmail(email: string) {
+    return await this.userRepository.findByEmail(email);
+  }
+
   async update(id: string, userUpdateDTO: UserUpdateDTO) {
     await this.findOne(id);
     await this.checkCref(userUpdateDTO.cref, userUpdateDTO.id);

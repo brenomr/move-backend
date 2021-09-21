@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { hash } from 'bcryptjs';
 import { PaginationDTO } from 'src/dtos/pagination.dto';
 import { StudentDTO } from 'src/dtos/student.dto';
@@ -66,6 +66,10 @@ export class StudentService {
 
   async findOne(id: string) {
     return await this.studentRepository.findOne(id);
+  }
+
+  async findByEmail(email: string) {
+    return await this.studentRepository.findByEmail(email);
   }
 
   async update(id: string, studentUpdateDTO: StudentUpdateDTO) {

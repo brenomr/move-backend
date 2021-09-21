@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ILike, Not, Repository } from "typeorm";
 import { UserModel } from "../models/user.model";
@@ -63,6 +63,16 @@ export class UserRepository {
     } catch {
       throw new NotFoundException(
         `Wasn't possible to find an user with the given id`
+      );
+    }
+  }
+
+  async findByEmail(email: string): Promise<UserModel> {
+    try{
+      return await this.userRepository.findOneOrFail({email});
+    } catch {
+      throw new ConflictException(
+        `Email or password incorrect`
       );
     }
   }
