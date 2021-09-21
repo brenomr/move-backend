@@ -8,6 +8,17 @@ export class StudentDTO {
   @ApiProperty({
     required: true,
     type: 'string',
+    example: 'student'
+  })
+  @IsNotEmpty()
+  @IsString()
+  @MaxLength(10)
+  @Expose()
+  whois: string;
+
+  @ApiProperty({
+    required: true,
+    type: 'string',
     example: 'Daniel'
   })
   @IsNotEmpty()

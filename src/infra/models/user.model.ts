@@ -19,9 +19,10 @@ export class UserModel extends Base {
   id: string = uuid();
 
   @Column({
-    type: 'boolean'
+    type: 'varchar',
+    length: 10,
   })
-  admin: boolean;
+  whois: string;
 
   @Column({
     type: 'varchar',

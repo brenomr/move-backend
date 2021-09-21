@@ -13,6 +13,13 @@ export class StudentResponseDTO {
 
   @ApiProperty({
     format: 'string',
+    example: 'student'
+  })
+  @Expose()
+  whois: string;
+
+  @ApiProperty({
+    format: 'string',
     example: 'Marcelo'
   })
   @Expose()

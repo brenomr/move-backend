@@ -11,11 +11,11 @@ export class UserResponseDTO {
   id: string;
 
   @ApiProperty({
-    format: 'boolean',
-    example: false
+    format: 'string',
+    example: 'personal'
   })
   @Expose()
-  admin: boolean;
+  whois: string;
 
   @ApiProperty({
     format: 'string',

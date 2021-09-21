@@ -18,6 +18,12 @@ export class StudentModel extends Base {
 
   @Column({
     type: 'varchar',
+    length: 10,
+  })
+  whois: string;
+
+  @Column({
+    type: 'varchar',
     length: 50,
   })
   name: string;

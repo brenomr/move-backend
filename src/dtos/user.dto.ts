@@ -6,13 +6,14 @@ export class UserDTO {
 
   @ApiProperty({
     required: true,
-    type: 'boolean',
-    example: false
+    type: 'string',
+    example: 'personal'
   })
   @IsNotEmpty()
-  @IsBoolean()
+  @IsString()
+  @MaxLength(10)
   @Expose()
-  admin: boolean;
+  whois: string;
 
   @ApiProperty({
     required: true,
