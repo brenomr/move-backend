@@ -65,7 +65,8 @@ export class StudentService {
   }
 
   async findOne(id: string) {
-    return await this.studentRepository.findOne(id);
+    const student = await this.studentRepository.findOne(id);
+    return autoMapper(StudentResponseDTO, student);
   }
 
   async findByEmail(email: string) {

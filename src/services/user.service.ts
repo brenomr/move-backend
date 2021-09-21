@@ -73,7 +73,8 @@ export class UserService {
   }
 
   async findOne(id: string) {
-    return await this.userRepository.findOne(id);
+    const user = await this.userRepository.findOne(id);
+    return autoMapper(UserResponseDTO, user);
   }
 
   async findByEmail(email: string) {
