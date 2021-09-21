@@ -12,6 +12,7 @@ import { CourseModule } from './course.module';
 import { TrainingModule } from './training.module';
 import { UserModule } from './user.module';
 import { PresenceModule } from './presence.module';
+import { AuthModule } from './auth.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { PresenceModule } from './presence.module';
     }),
     ActivityModule,
     AssessmentModule,
+    AuthModule,
     CourseModule,
     ExerciseModule,
     PresenceModule,
