@@ -1,5 +1,7 @@
 import { Controller, Get, Post, Body, Param, Delete, Put, Query, HttpCode } from '@nestjs/common';
 import { ApiCreatedResponse, ApiNoContentResponse, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
+import { Role } from 'src/auth/role.enum';
+import { Roles } from 'src/auth/roles.decorator';
 import { CourseDTO } from 'src/dtos/course.dto';
 import { CourseResponseDTO } from 'src/dtos/course.response.dto';
 import { CourseUpdateDTO } from 'src/dtos/course.update.dto';
@@ -19,6 +21,7 @@ export class CourseController {
     description: 'Create a new course'
   })
   @Post()
+  @Roles(Role.Admin, Role.Personal)
   @HttpCode(201)
   async create(@Body() courseDTO: CourseDTO) {
     return await this.courseService.create(courseDTO);
@@ -29,6 +32,7 @@ export class CourseController {
     description: 'List courses'
   })
   @Get()
+  @Roles(Role.Admin, Role.Personal, Role.Student)
   @HttpCode(200)
   @ApiQuery({ name: 'page', allowEmptyValue: true, type: Number, required: false })
   @ApiQuery({ name: 'limit', allowEmptyValue: true, type: Number, required: false })
@@ -71,6 +75,7 @@ export class CourseController {
     description: 'Get a course by id'
   })
   @Get(':id')
+  @Roles(Role.Admin, Role.Personal, Role.Student)
   @HttpCode(200)
   async findOne(@Param('id') id: string) {
     return await this.courseService.findOne(id);
@@ -81,6 +86,7 @@ export class CourseController {
     description: 'Update a course by id'
   })
   @Put(':id')
+  @Roles(Role.Admin, Role.Personal)
   @HttpCode(200)
   async update(@Param('id') id: string, @Body() courseUpdateDTO: CourseUpdateDTO) {
     return await this.courseService.update(id, courseUpdateDTO);
@@ -90,6 +96,7 @@ export class CourseController {
     description: 'Delete a course by id'
   })
   @Delete(':id')
+  @Roles(Role.Admin, Role.Personal)
   @HttpCode(204)
   remove(@Param('id') id: string) {
     return this.courseService.remove(id);

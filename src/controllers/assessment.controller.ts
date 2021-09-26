@@ -1,5 +1,7 @@
 import { Controller, Get, Post, Body, Param, Delete, Put, Query, HttpCode } from '@nestjs/common';
 import { ApiCreatedResponse, ApiNoContentResponse, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
+import { Role } from 'src/auth/role.enum';
+import { Roles } from 'src/auth/roles.decorator';
 import { AssessmentDTO } from 'src/dtos/assessment.dto';
 import { AssessmentResponseDTO } from 'src/dtos/assessment.response.dto';
 import { AssessmentUpdateDTO } from 'src/dtos/assessment.update.dto';
@@ -18,6 +20,7 @@ export class AssessmentController {
     description: 'Create a new assessment'
   })
   @Post()
+  @Roles(Role.Admin, Role.Personal)
   @HttpCode(201)
   async create(@Body() assessmentDTO: AssessmentDTO) {
     return await this.assessmentService.create(assessmentDTO);
@@ -28,6 +31,7 @@ export class AssessmentController {
     description: 'List assessments'
   })
   @Get()
+  @Roles(Role.Admin, Role.Personal, Role.Student)
   @HttpCode(200)
   @ApiQuery({ name: 'page', allowEmptyValue: true, type: Number, required: false })
   @ApiQuery({ name: 'limit', allowEmptyValue: true, type: Number, required: false })
@@ -55,6 +59,7 @@ export class AssessmentController {
     description: 'Get an assessment by id'
   })
   @Get(':id')
+  @Roles(Role.Admin, Role.Personal, Role.Student)
   @HttpCode(200)
   async findOne(@Param('id') id: string) {
     return await this.assessmentService.findOne(id);
@@ -65,6 +70,7 @@ export class AssessmentController {
     description: 'Update an assessment by id'
   })
   @Put(':id')
+  @Roles(Role.Admin, Role.Personal)
   @HttpCode(200)
   async update(@Param('id') id: string, @Body() assessmentUpdateDTO: AssessmentUpdateDTO) {
     return await this.assessmentService.update(id, assessmentUpdateDTO);
@@ -74,6 +80,7 @@ export class AssessmentController {
     description: 'Delete an assessment by id'
   })
   @Delete(':id')
+  @Roles(Role.Admin, Role.Personal)
   @HttpCode(204)
   remove(@Param('id') id: string) {
     return this.assessmentService.remove(id);

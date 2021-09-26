@@ -1,5 +1,7 @@
 import { Controller, Get, Post, Body, Param, Delete, Put, Query, HttpCode } from '@nestjs/common';
 import { ApiCreatedResponse, ApiNoContentResponse, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
+import { Role } from 'src/auth/role.enum';
+import { Roles } from 'src/auth/roles.decorator';
 import { ActivityDTO } from 'src/dtos/activity.dto';
 import { ActivityResponseDTO } from 'src/dtos/activity.response.dto';
 import { ActivityUpdateDTO } from 'src/dtos/activity.update.dto';
@@ -18,6 +20,7 @@ export class ActivityController {
     description: 'Create a new activity'
   })
   @Post()
+  @Roles(Role.Admin)
   @HttpCode(201)
   async create(@Body() activityDTO: ActivityDTO) {
     return await this.activityService.create(activityDTO);
@@ -28,6 +31,7 @@ export class ActivityController {
     description: 'List activities'
   })
   @Get()
+  @Roles(Role.Admin, Role.Personal)
   @HttpCode(200)
   @ApiQuery({ name: 'page', allowEmptyValue: true, type: Number, required: false })
   @ApiQuery({ name: 'limit', allowEmptyValue: true, type: Number, required: false })
@@ -55,6 +59,7 @@ export class ActivityController {
     description: 'Get an activity by id'
   })
   @Get(':id')
+  @Roles(Role.Admin, Role.Personal)
   @HttpCode(200)
   async findOne(@Param('id') id: string) {
     return await this.activityService.findOne(id);
@@ -65,6 +70,7 @@ export class ActivityController {
     description: 'Update an activity by id'
   })
   @Put(':id')
+  @Roles(Role.Admin)
   @HttpCode(200)
   async update(@Param('id') id: string, @Body() activityUpdateDTO: ActivityUpdateDTO) {
     return await this.activityService.update(id, activityUpdateDTO);
@@ -74,6 +80,7 @@ export class ActivityController {
     description: 'Delete an activity by id'
   })
   @Delete(':id')
+  @Roles(Role.Admin)
   @HttpCode(204)
   remove(@Param('id') id: string) {
     return this.activityService.remove(id);

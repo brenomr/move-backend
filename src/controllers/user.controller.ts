@@ -1,5 +1,8 @@
 import { Controller, Get, Post, Body, Param, Delete, Put, Query, HttpCode } from '@nestjs/common';
 import { ApiCreatedResponse, ApiNoContentResponse, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
+import { Public } from 'src/auth/public.decorator';
+import { Role } from 'src/auth/role.enum';
+import { Roles } from 'src/auth/roles.decorator';
 import { PaginationDTO } from 'src/dtos/pagination.dto';
 import { UserDTO } from 'src/dtos/user.dto';
 import { UserResponseDTO } from 'src/dtos/user.response.dto';
@@ -18,6 +21,7 @@ export class UserController {
     description: 'Create a new user'
   })
   @Post()
+  @Roles(Role.Admin)
   @HttpCode(201)
   async create(@Body() userDTO: UserDTO) {
     return await this.userService.create(userDTO);
@@ -28,6 +32,8 @@ export class UserController {
     description: 'List users'
   })
   @Get()
+  @Roles(Role.Admin)
+  @Roles(Role.Student, Role.Personal)
   @HttpCode(200)
   @ApiQuery({ name: 'page', allowEmptyValue: true, type: Number, required: false })
   @ApiQuery({ name: 'limit', allowEmptyValue: true, type: Number, required: false })
@@ -58,7 +64,9 @@ export class UserController {
     type: UserResponseDTO,
     description: 'Get user by id'
   })
+  @Public()
   @Get(':id')
+  @Roles(Role.Admin, Role.Personal)
   @HttpCode(200)
   async findOne(@Param('id') id: string) {
     return await this.userService.findOne(id);
@@ -69,6 +77,7 @@ export class UserController {
     description: 'Update an user by id'
   })
   @Put(':id')
+  @Roles(Role.Admin, Role.Personal)
   @HttpCode(200)
   async update(@Param('id') id: string, @Body() userUpdateDTO: UserUpdateDTO) {
     return await this.userService.update(id, userUpdateDTO);
@@ -78,6 +87,7 @@ export class UserController {
     description: 'Delete an user by id'
   })
   @Delete(':id')
+  @Roles(Role.Admin)
   @HttpCode(204)
   remove(@Param('id') id: string) {
     return this.userService.remove(id);

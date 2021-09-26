@@ -1,5 +1,7 @@
 import { Controller, Get, Post, Body, Param, Delete, Put, Query, HttpCode } from '@nestjs/common';
 import { ApiCreatedResponse, ApiNoContentResponse, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
+import { Role } from 'src/auth/role.enum';
+import { Roles } from 'src/auth/roles.decorator';
 import { ExerciseDTO } from 'src/dtos/exercise.dto';
 import { ExerciseResponseDTO } from 'src/dtos/exercise.response.dto';
 import { ExerciseUpdateDTO } from 'src/dtos/exercise.update.dto';
@@ -18,6 +20,7 @@ export class ExerciseController {
     description: 'Create a new exercise'
   })
   @Post()
+  @Roles(Role.Admin, Role.Personal)
   @HttpCode(201)
   async create(@Body() exerciseDTO: ExerciseDTO) {
     return await this.exerciseService.create(exerciseDTO);
@@ -28,6 +31,7 @@ export class ExerciseController {
     description: 'List exercises'
   })
   @Get()
+  @Roles(Role.Admin, Role.Personal, Role.Student)
   @HttpCode(200)
   @ApiQuery({ name: 'page', allowEmptyValue: true, type: Number, required: false })
   @ApiQuery({ name: 'limit', allowEmptyValue: true, type: Number, required: false })
@@ -63,6 +67,7 @@ export class ExerciseController {
     description: 'Get an exercise by id'
   })
   @Get(':id')
+  @Roles(Role.Admin, Role.Personal, Role.Student)
   @HttpCode(200)
   async findOne(@Param('id') id: string) {
     return await this.exerciseService.findOne(id);
@@ -73,6 +78,7 @@ export class ExerciseController {
     description: 'Update an exercise by id'
   })
   @Put(':id')
+  @Roles(Role.Admin, Role.Personal)
   @HttpCode(200)
   async update(@Param('id') id: string, @Body() exerciseUpdateDTO: ExerciseUpdateDTO) {
     return await this.exerciseService.update(id, exerciseUpdateDTO);
@@ -82,6 +88,7 @@ export class ExerciseController {
     description: 'Delete an exercise by id'
   })
   @Delete(':id')
+  @Roles(Role.Admin, Role.Personal)
   @HttpCode(204)
   remove(@Param('id') id: string) {
     return this.exerciseService.remove(id);
