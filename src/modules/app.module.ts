@@ -22,11 +22,7 @@ import { RolesGuard } from 'src/auth/roles.guard';
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: process.env.TYPEORM_CONNECTION as any,
-      host: process.env.TYPEORM_HOST,
-      port: Number(process.env.TYPEORM_PORT),
-      username: process.env.TYPEORM_USERNAME,
-      password: process.env.TYPEORM_PASSWORD,
-      database: process.env.TYPEORM_DATABASE,
+      url: process.env.DATABASE_URL || process.env.TYPEORM_URL,
       entities: [join(__dirname, '..', '**', '*.model*{.ts,.js}')],
       migrations: [join(__dirname, '..', '**', '/migrations/*{.ts,.js}')],
       synchronize: process.env.TYPEORM_SYNCHRONIZE === 'true',
