@@ -1,6 +1,6 @@
 
 import { Controller, Request, Post, UseGuards } from '@nestjs/common';
-import { ApiCreatedResponse } from '@nestjs/swagger';
+import { ApiBody, ApiCreatedResponse } from '@nestjs/swagger';
 import { LocalAuthGuard } from 'src/auth/local.auth.guard';
 import { Public } from 'src/auth/public.decorator';
 import { LoginDTO } from 'src/dtos/login.dto';
@@ -16,6 +16,9 @@ export class AuthController {
   @ApiCreatedResponse({
     type: LoginDTO,
     description: 'Login'
+  })
+  @ApiBody({
+    type: LoginDTO
   })
   @Public()
   @UseGuards(LocalAuthGuard)
