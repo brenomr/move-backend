@@ -22,6 +22,7 @@ import { RolesGuard } from 'src/auth/roles.guard';
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: process.env.TYPEORM_CONNECTION as any,
+      ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
       url: process.env.DATABASE_URL || process.env.TYPEORM_URL,
       entities: [join(__dirname, '..', '**', '*.model*{.ts,.js}')],
       migrations: [join(__dirname, '..', '**', '/migrations/*{.ts,.js}')],
