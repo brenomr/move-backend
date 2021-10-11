@@ -63,7 +63,6 @@ export class UserController {
     type: UserResponseDTO,
     description: 'Get user by id'
   })
-  @Public()
   @Get(':id')
   @Roles(Role.Admin, Role.Personal)
   @HttpCode(200)
