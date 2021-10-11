@@ -32,8 +32,7 @@ export class UserController {
     description: 'List users'
   })
   @Get()
-  @Roles(Role.Admin)
-  @Roles(Role.Student, Role.Personal)
+  @Roles(Role.Admin, Role.Personal)
   @HttpCode(200)
   @ApiQuery({ name: 'page', allowEmptyValue: true, type: Number, required: false })
   @ApiQuery({ name: 'limit', allowEmptyValue: true, type: Number, required: false })
