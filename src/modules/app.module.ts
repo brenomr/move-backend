@@ -20,14 +20,16 @@ import { RolesGuard } from 'src/auth/roles.guard';
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    TypeOrmModule.forRoot({
-      type: process.env.TYPEORM_CONNECTION as any,
-      ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
-      url: process.env.DATABASE_URL || process.env.TYPEORM_URL,
-      entities: [join(__dirname, '..', '**', '*.model*{.ts,.js}')],
-      migrations: [join(__dirname, '..', '**', '/migrations/*{.ts,.js}')],
-      synchronize: process.env.TYPEORM_SYNCHRONIZE === 'true',
-      logging: process.env.TYPEORM_LOGGING === 'true',
+    TypeOrmModule.forRootAsync({
+      useFactory: () => ({
+        type: process.env.DATABASE_TYPE as any,
+        ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+        url: process.env.DATABASE_URL,
+        entities: [join(__dirname, '..', '**', '*.model*{.ts,.js}')],
+        migrations: [join(__dirname, '..', '**', '/migrations/*{.ts,.js}')],
+        synchronize: process.env.DATABASE_SYNCHRONIZE === 'true',
+        logging: process.env.DATABASE_LOGGING === 'true',
+      })
     }),
     ActivityModule,
     AssessmentModule,
