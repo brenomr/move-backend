@@ -1,5 +1,6 @@
-import { Controller, Get, Post, Body, Param, Delete, Put, Query, HttpCode } from '@nestjs/common';
-import { ApiCreatedResponse, ApiNoContentResponse, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
+import { Controller, Get, Post, Body, Param, Delete, Put, Query, HttpCode, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiConsumes, ApiCreatedResponse, ApiNoContentResponse, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
 import { Public } from 'src/auth/public.decorator';
 import { Role } from 'src/auth/role.enum';
 import { Roles } from 'src/auth/roles.decorator';
@@ -26,6 +27,26 @@ export class UserController {
   async create(@Body() userDTO: UserDTO) {
     return await this.userService.create(userDTO);
   }
+
+  // Setting up new post endpoint for file upload
+  @ApiConsumes('multipart/form-data')
+  @Post('newuser')
+  @UseInterceptors(FileInterceptor('photo_url', {
+    // fileFilter: // define a filter for permited file types (jpg, png and pdf)
+  }))
+  async newUser(
+    @Body() UserDTO: UserDTO,
+    @UploadedFile() file: Express.Multer.File) {
+    console.log(UserDTO);
+    console.log(file);
+  }
+
+  // Example extract from NestJS documentation
+  // @Post('uploadfile')
+  // @UseInterceptors(FileInterceptor('photo_url'))
+  // async uploadFile(@UploadedFile() file: Express.Multer.File) {
+  //   console.log(file);
+  // }
 
   @ApiOkResponse({
     type: [UserResponseDTO],
