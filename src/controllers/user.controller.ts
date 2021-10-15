@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Body, Param, Delete, Put, Query, HttpCode, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiConsumes, ApiCreatedResponse, ApiNoContentResponse, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
-import { Public } from 'src/auth/public.decorator';
 import { Role } from 'src/auth/role.enum';
 import { Roles } from 'src/auth/roles.decorator';
 import { PaginationDTO } from 'src/dtos/pagination.dto';
