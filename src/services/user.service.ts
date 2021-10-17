@@ -9,6 +9,7 @@ import { UserRepository } from 'src/infra/repositories/user.repository';
 import { autoMapper } from 'src/utils/autoMapper';
 import { S3 } from 'aws-sdk';
 import { v4 as uuid } from 'uuid';
+import { ProfileUpdateDTO } from 'src/dtos/profile.update.dto';
 
 @Injectable()
 export class UserService {
@@ -106,6 +107,30 @@ export class UserService {
     const updatedUser = await this.userRepository.update(id, userToUpdate);
 
     return autoMapper(UserResponseDTO, updatedUser);;
+  }
+
+  async profileUpdate(
+    id: string,
+    profileUpdate: ProfileUpdateDTO,
+    buffer?: Buffer,
+    originalname?: string
+    ) {
+
+    const user = await this.findOne(id);
+
+    if (buffer && originalname) {
+      user.photo_url = await this.uploadFile(buffer, originalname);
+    }
+
+    if(profileUpdate.nickname) {
+      user.nickname = profileUpdate.nickname;
+    }
+
+    const userToUpdate = autoMapper(UserModel, user, false);
+
+    const updatedUser = await this.userRepository.update(id, userToUpdate);
+
+    return autoMapper(UserResponseDTO, updatedUser);
   }
 
   async remove(id: string) {
