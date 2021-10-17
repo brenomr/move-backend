@@ -21,27 +21,32 @@ export class UserController {
     type: UserResponseDTO,
     description: 'Create a new user'
   })
+  @ApiConsumes('multipart/form-data')
   @Post()
   @Roles(Role.Admin)
   @HttpCode(201)
-  async create(@Body() userDTO: UserDTO) {
-    return await this.userService.create(userDTO);
-  }
-
-  @ApiConsumes('multipart/form-data')
-  @Post('newuser')
   @UseInterceptors(FileInterceptor('photo_url', {
     fileFilter: fileChecker,
     limits: maxFileSize,
   }))
-  async newUser(
+  async create(
     @Req() req: any,
-    @Body() UserDTO: UserDTO,
+    @Body() userDTO: UserDTO,
     @UploadedFile() file: Express.Multer.File
   ) {
     if (req.fileValidationError) {
       throw new UnsupportedMediaTypeException(`Invalid file type, ${req.fileValidationError}`);
     }
+
+    await this.userService.checkCref(userDTO.cref);
+    await this.userService.checkEmail(userDTO.email);
+
+    if (file) {
+      const { buffer, originalname } = file;
+
+      userDTO.photo_url = await this.userService.uploadFile(buffer, originalname);
+    }
+    return await this.userService.create(userDTO);
   }
 
   @ApiOkResponse({
