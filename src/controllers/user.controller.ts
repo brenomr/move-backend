@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, Put, Query, HttpCode, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put, Query, HttpCode, UseInterceptors, UploadedFile, Req, UnsupportedMediaTypeException } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiConsumes, ApiCreatedResponse, ApiNoContentResponse, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
 import { Role } from 'src/auth/role.enum';
@@ -8,6 +8,7 @@ import { UserDTO } from 'src/dtos/user.dto';
 import { UserResponseDTO } from 'src/dtos/user.response.dto';
 import { UserUpdateDTO } from 'src/dtos/user.update.dto';
 import { UserService } from 'src/services/user.service';
+import { fileChecker, maxFileSize } from 'src/utils/fileChecker';
 
 
 @Controller('users')
@@ -31,11 +32,17 @@ export class UserController {
   @ApiConsumes('multipart/form-data')
   @Post('newuser')
   @UseInterceptors(FileInterceptor('photo_url', {
-    // fileFilter: // define a filter for permited file types (jpg, png and pdf)
+    fileFilter: fileChecker,
+    limits: maxFileSize,
   }))
   async newUser(
+    @Req() req: any,
     @Body() UserDTO: UserDTO,
-    @UploadedFile() file: Express.Multer.File) {
+    @UploadedFile() file: Express.Multer.File
+  ) {
+    if (req.fileValidationError) {
+      throw new UnsupportedMediaTypeException(`Invalid file type, ${req.fileValidationError}`);
+    }
     console.log(UserDTO);
     console.log(file);
   }
