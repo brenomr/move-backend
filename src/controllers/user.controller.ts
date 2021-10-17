@@ -28,7 +28,6 @@ export class UserController {
     return await this.userService.create(userDTO);
   }
 
-  // Setting up new post endpoint for file upload
   @ApiConsumes('multipart/form-data')
   @Post('newuser')
   @UseInterceptors(FileInterceptor('photo_url', {
@@ -43,16 +42,7 @@ export class UserController {
     if (req.fileValidationError) {
       throw new UnsupportedMediaTypeException(`Invalid file type, ${req.fileValidationError}`);
     }
-    console.log(UserDTO);
-    console.log(file);
   }
-
-  // Example extract from NestJS documentation
-  // @Post('uploadfile')
-  // @UseInterceptors(FileInterceptor('photo_url'))
-  // async uploadFile(@UploadedFile() file: Express.Multer.File) {
-  //   console.log(file);
-  // }
 
   @ApiOkResponse({
     type: [UserResponseDTO],
