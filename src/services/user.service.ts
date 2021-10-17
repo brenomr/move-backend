@@ -7,7 +7,8 @@ import { UserUpdateDTO } from 'src/dtos/user.update.dto';
 import { UserModel } from 'src/infra/models/user.model';
 import { UserRepository } from 'src/infra/repositories/user.repository';
 import { autoMapper } from 'src/utils/autoMapper';
-
+import { S3 } from 'aws-sdk';
+import { v4 as uuid } from 'uuid';
 
 @Injectable()
 export class UserService {
@@ -27,6 +28,22 @@ export class UserService {
     const result = await this.userRepository.checkEmail(email, id);
     if(result) {
       throw new ConflictException(`Email already in use`);
+    }
+  }
+
+  async uploadFile(dataBuffer: Buffer, fileName: string): Promise<string> {
+    try {
+      const s3 = new S3();
+
+      const uploadResult = await s3.upload({
+        Bucket: process.env.AWS_PUBLIC_BUCKET_NAME,
+        Body: dataBuffer,
+        Key: `Photo-${uuid()}-${fileName}`
+      }).promise();
+
+      return uploadResult.Location;
+    } catch(err) {
+      throw new Error(`Something went wrong trying to upload the photo`);
     }
   }
 
