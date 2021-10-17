@@ -96,7 +96,9 @@ export class UserController {
     type: UserResponseDTO,
     description: 'Update an user by id'
   })
+  @ApiConsumes('multipart/form-data')
   @Put(':id')
+  @UseInterceptors(FileInterceptor('photo_url'))
   @Roles(Role.Admin, Role.Personal)
   @HttpCode(200)
   async update(@Param('id') id: string, @Body() userUpdateDTO: UserUpdateDTO) {

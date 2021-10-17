@@ -166,13 +166,8 @@ export class UserUpdateDTO {
 
   @ApiProperty({
     required: false,
-    type: 'string',
-    example: 'https://anyphoto.net.example/dfaoj3fad0jpo23jlasphoto2'
   })
-  @IsOptional()
-  @IsString()
-  @MaxLength(300)
-  @Expose()
+  @Exclude()
   photo_url: string;
 
   @ApiProperty({
