@@ -3,12 +3,13 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiConsumes, ApiCreatedResponse, ApiNoContentResponse, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
 import { Role } from 'src/auth/role.enum';
 import { Roles } from 'src/auth/roles.decorator';
+import { ProfileUpdateDTO } from 'src/dtos/profile.update.dto';
 import { PaginationDTO } from 'src/dtos/pagination.dto';
 import { UserDTO } from 'src/dtos/user.dto';
 import { UserResponseDTO } from 'src/dtos/user.response.dto';
 import { UserUpdateDTO } from 'src/dtos/user.update.dto';
 import { UserService } from 'src/services/user.service';
-import { fileChecker, maxFileSize } from 'src/utils/fileChecker';
+import { photoChecker, maxFileSize } from 'src/utils/fileChecker';
 
 
 @Controller('users')
@@ -26,7 +27,7 @@ export class UserController {
   @Roles(Role.Admin)
   @HttpCode(201)
   @UseInterceptors(FileInterceptor('photo_url', {
-    fileFilter: fileChecker,
+    fileFilter: photoChecker,
     limits: maxFileSize,
   }))
   async create(
@@ -103,6 +104,36 @@ export class UserController {
   @HttpCode(200)
   async update(@Param('id') id: string, @Body() userUpdateDTO: UserUpdateDTO) {
     return await this.userService.update(id, userUpdateDTO);
+  }
+
+  @ApiOkResponse({
+    type: UserResponseDTO,
+    description: 'Update an user profile by id'
+  })
+  @ApiConsumes('multipart/form-data')
+  @Put('profile/:id')
+  @UseInterceptors(FileInterceptor('photo_url', {
+    fileFilter: photoChecker,
+    limits: maxFileSize,
+  }))
+  @Roles(Role.Admin, Role.Personal)
+  @HttpCode(200)
+  async profileUpdate(
+    @Param('id') id: string,
+    @Req() req: any,
+    @Body() profileUpdateDTO: ProfileUpdateDTO,
+    @UploadedFile() file: Express.Multer.File
+  ) {
+    if (req.fileValidationError) {
+      throw new UnsupportedMediaTypeException(`Invalid file type, ${req.fileValidationError}`);
+    }
+    if (file) {
+      const { buffer, originalname } = file;
+
+      return await this.userService.profileUpdate(id, profileUpdateDTO, buffer, originalname);
+    }
+
+    return await this.userService.profileUpdate(id, profileUpdateDTO);
   }
 
   @ApiNoContentResponse({
