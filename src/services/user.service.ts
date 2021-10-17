@@ -38,7 +38,8 @@ export class UserService {
       const uploadResult = await s3.upload({
         Bucket: process.env.AWS_PUBLIC_BUCKET_NAME,
         Body: dataBuffer,
-        Key: `Photo-${uuid()}-${fileName}`
+        Key: `photo/avatar-${uuid()}-${fileName}`,
+        ContentType: 'image/jpeg'
       }).promise();
 
       return uploadResult.Location;
@@ -48,9 +49,6 @@ export class UserService {
   }
 
   async create(userDTO: UserDTO) {
-    await this.checkCref(userDTO.cref);
-    await this.checkEmail(userDTO.email);
-
     userDTO.password = await hash(userDTO.password, 8);
 
     const newUser = autoMapper(UserModel, userDTO, false);
