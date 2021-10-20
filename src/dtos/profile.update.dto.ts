@@ -16,7 +16,8 @@ export class ProfileUpdateDTO {
 
   @ApiProperty({
     required: false,
-    type: 'string'
+    type: 'string',
+    format: 'base64',
   })
   @IsOptional()
   @IsBase64()
