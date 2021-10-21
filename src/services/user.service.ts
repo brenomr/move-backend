@@ -106,7 +106,7 @@ export class UserService {
 
     const updatedUser = await this.userRepository.update(id, userToUpdate);
 
-    return autoMapper(UserResponseDTO, updatedUser);;
+    return autoMapper(UserResponseDTO, updatedUser);
   }
 
   async profileUpdate(
