@@ -9,7 +9,7 @@ import { UserDTO } from 'src/dtos/user.dto';
 import { UserResponseDTO } from 'src/dtos/user.response.dto';
 import { UserUpdateDTO } from 'src/dtos/user.update.dto';
 import { UserService } from 'src/services/user.service';
-import { photoChecker, maxFileSize } from 'src/utils/fileChecker';
+import { photoChecker, maxPhotoSize } from 'src/utils/fileChecker';
 
 
 @Controller('users')
@@ -28,7 +28,7 @@ export class UserController {
   @HttpCode(201)
   @UseInterceptors(FileInterceptor('photo_url', {
     fileFilter: photoChecker,
-    limits: maxFileSize,
+    limits: maxPhotoSize,
   }))
   async create(
     @Req() req: any,
@@ -114,7 +114,7 @@ export class UserController {
   @Put('profile/:id')
   @UseInterceptors(FileInterceptor('photo_url', {
     fileFilter: photoChecker,
-    limits: maxFileSize,
+    limits: maxPhotoSize,
   }))
   @Roles(Role.Admin, Role.Personal)
   @HttpCode(200)
