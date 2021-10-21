@@ -57,6 +57,27 @@ export class StudentRepository {
     }
   }
 
+  async listByPersonal(
+    limit: number,
+    skip: number,
+    orderBy: string,
+    order: string,
+    personal: string,
+  ): Promise<{ students: StudentModel[], total: number }> {
+    try{
+
+      const result = await this.studentRepository
+        .createQueryBuilder('students')
+        .leftJoinAndSelect('students.personals', 'personal')
+        .where('personal.id = :id', { id: personal })
+        .getManyAndCount();
+
+      return { students: result[0], total: result[1] };
+    } catch {
+      throw new Error(`Wasn't possible to list students by personal`);
+    }
+  }
+
   async findOne(id: string): Promise<StudentModel> {
     try{
       return await this.studentRepository.findOneOrFail(id);

@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { hash } from 'bcryptjs';
 import { PaginationDTO } from 'src/dtos/pagination.dto';
 import { StudentDTO } from 'src/dtos/student.dto';
@@ -7,6 +7,9 @@ import { StudentUpdateDTO } from 'src/dtos/student.update.dto';
 import { StudentModel } from 'src/infra/models/student.model';
 import { StudentRepository } from 'src/infra/repositories/student.repository';
 import { autoMapper } from 'src/utils/autoMapper';
+import { S3 } from 'aws-sdk';
+import { v4 as uuid } from 'uuid';
+import { ProfileUpdateDTO } from 'src/dtos/profile.update.dto';
 
 
 @Injectable()
@@ -23,10 +26,26 @@ export class StudentService {
     }
   }
 
-  async create(studentDTO: StudentDTO) {
-    await this.checkEmail(studentDTO.email);
+  async uploadFile(dataBuffer: Buffer, fileName: string): Promise<string> {
+    try {
+      const s3 = new S3();
 
+      const uploadResult = await s3.upload({
+        Bucket: process.env.AWS_PUBLIC_BUCKET_NAME,
+        Body: dataBuffer,
+        Key: `photo/avatar-${uuid()}-${fileName}`,
+        ContentType: 'image/jpeg'
+      }).promise();
+
+      return uploadResult.Location;
+    } catch(err) {
+      throw new Error(`Something went wrong trying to upload the photo`);
+    }
+  }
+
+  async create(studentDTO: StudentDTO) {
     studentDTO.password = await hash(studentDTO.password, 8);
+    studentDTO.personals = JSON.parse(studentDTO.personals);
 
     const newStudent = autoMapper(StudentModel, studentDTO, false);
     
@@ -76,8 +95,33 @@ export class StudentService {
   async update(id: string, studentUpdateDTO: StudentUpdateDTO) {
     await this.findOne(id);
     await this.checkEmail(studentUpdateDTO.email, studentUpdateDTO.id);
+    studentUpdateDTO.personals = JSON.parse(studentUpdateDTO.personals);
 
     const studentToUpdate = autoMapper(StudentModel, studentUpdateDTO, false);
+
+    const updatedStudent = await this.studentRepository.update(id, studentToUpdate);
+
+    return autoMapper(StudentResponseDTO, updatedStudent);
+  }
+
+  async profileUpdate(
+    id: string,
+    profileUpdate: ProfileUpdateDTO,
+    buffer?: Buffer,
+    originalname?: string
+    ) {
+
+    const student = await this.findOne(id);
+
+    if (buffer && originalname) {
+      student.photo_url = await this.uploadFile(buffer, originalname);
+    }
+
+    if(profileUpdate.nickname) {
+      student.nickname = profileUpdate.nickname;
+    }
+
+    const studentToUpdate = autoMapper(StudentModel, student, false);
 
     const updatedStudent = await this.studentRepository.update(id, studentToUpdate);
 
