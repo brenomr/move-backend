@@ -76,9 +76,13 @@ export class ActivityService {
   }
 
   async update(id: string, activityUpdateDTO: ActivityUpdateDTO) {
-    await this.findOne(id);
-
+    const activityFound = await this.findOne(id);
+    
     activityUpdateDTO.user = JSON.parse(activityUpdateDTO.user);
+
+    if(!activityUpdateDTO.image_url) {
+      activityUpdateDTO.image_url = activityFound.image_url;
+    }
 
     const activityToUpdate = autoMapper(ActivityModel, activityUpdateDTO, false);
 
