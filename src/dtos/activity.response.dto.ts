@@ -39,3 +39,34 @@ export class ActivityResponseDTO {
   @Type(() => UserResponseDTO)
   user: UserResponseDTO;
 }
+
+export class ActivityToRelationResponseDTO {
+
+  @ApiProperty({
+    format: 'uuid',
+    example: 'd0fa98cb-d225-4ef3-bc32-c39c7be56fb1'
+  })
+  @Expose()
+  id: string;
+
+  @ApiProperty({
+    format: 'string',
+    example: 'Abdominal'
+  })
+  @Expose()
+  name: string;
+
+  @ApiProperty({
+    format: 'string',
+    example: 'Musculação'
+  })
+  @Expose()
+  category: string;
+
+  @ApiProperty({
+    format: 'string',
+    example: 'https://anyphoto.net.example/dfaoj3fad0jpo23jlasphoto2'
+  })
+  @Expose()
+  image_url: string;
+}

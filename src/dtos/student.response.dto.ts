@@ -116,3 +116,27 @@ export class StudentResponseDTO {
   @Type(() => UserResponseDTO)
   personals: UserResponseDTO[];
 }
+
+export class StudentToRelationResponseDTO {
+
+  @ApiProperty({
+    format: 'uuid',
+    example: 'bc637731-ae16-48d0-80e3-1859a37959dc'
+  })
+  @Expose()
+  id: string;
+
+  @ApiProperty({
+    format: 'string',
+    example: 'student'
+  })
+  @Expose()
+  whois: string;
+
+  @ApiProperty({
+    format: 'string',
+    example: 'Marcelo'
+  })
+  @Expose()
+  name: string;
+}
