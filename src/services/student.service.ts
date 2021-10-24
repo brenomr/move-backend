@@ -14,7 +14,6 @@ import { ProfileUpdateDTO } from 'src/dtos/profile.update.dto';
 
 @Injectable()
 export class StudentService {
-
   constructor(
     private readonly studentRepository: StudentRepository
   ) {}
@@ -59,6 +58,7 @@ export class StudentService {
     name: string,
     email: string,
     phone: string,
+    userId?: string,
   ) {
     
     const limit = Number(pagination.limit) > 10 ? 10 : Number(pagination.limit);
@@ -66,7 +66,7 @@ export class StudentService {
 
     const skip = (page - 1) * limit;
     const orderBy = pagination.orderBy ? pagination.orderBy : 'name';
-    const order = pagination.order.toLocaleUpperCase()
+    const order = (pagination.order.toUpperCase() === 'ASC') ? 'ASC' : 'DESC';
 
     const { students, total } = await this.studentRepository.findAll(
       limit,
@@ -76,6 +76,7 @@ export class StudentService {
       name,
       email,
       phone,
+      userId,
     );
 
     const data = autoMapper(StudentResponseDTO, students);

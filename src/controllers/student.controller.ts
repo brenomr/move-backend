@@ -10,6 +10,7 @@ import { StudentResponseDTO } from 'src/dtos/student.response.dto';
 import { StudentUpdateDTO } from 'src/dtos/student.update.dto';
 import { StudentService } from 'src/services/student.service';
 import { maxPhotoSize, photoChecker } from 'src/utils/fileChecker';
+import { UserRequest } from 'src/utils/interfaces';
 
 
 @Controller('students')
@@ -76,12 +77,16 @@ export class StudentController {
     email: string,
     @Query('phone')
     phone: string,
+    @Req()
+    req: UserRequest,
   ) {
+    const user = req.user;
     return await this.studentService.findAll(
       pagination,
       name,
       email,
-      phone
+      phone,
+      user.whois.includes('personal') ? user.userId : undefined,
     );
   }
 
