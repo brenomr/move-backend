@@ -127,8 +127,8 @@ export class UserToRelationResponseDTO {
 
   @ApiProperty({
     format: 'string',
-    example: 'Rafinha'
+    example: 'Rafaela'
   })
   @Expose()
-  nickname: string;
+  name: string;
 }

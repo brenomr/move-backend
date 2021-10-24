@@ -34,11 +34,13 @@ export class AssessmentModel extends Base {
   attached_url: string;
 
   @ManyToOne(() => UserModel, user => user.assessments, {
+    eager: true,
     cascade: true,
   })
   personal: UserModel;
 
   @ManyToOne(() => StudentModel, student => student.assessments, {
+    eager: true,
     cascade: true,
   })
   student: StudentModel;
