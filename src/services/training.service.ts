@@ -28,6 +28,7 @@ export class TrainingService {
     title: string,
     description: string,
     personal_name: string,
+    userId?: string,
   ) {
     
     const limit = Number(pagination.limit) > 10 ? 10 : Number(pagination.limit);
@@ -35,7 +36,7 @@ export class TrainingService {
 
     const skip = (page - 1) * limit;
     const orderBy = pagination.orderBy ? pagination.orderBy : 'title';
-    const order = pagination.order.toLocaleUpperCase()
+    const order = (pagination.order.toUpperCase() === 'ASC') ? 'ASC' : 'DESC';
 
     const { trainings, total } = await this.trainingRepository.findAll(
       limit,
@@ -45,6 +46,7 @@ export class TrainingService {
       title,
       description,
       personal_name,
+      userId,
     );
 
     const data = autoMapper(TrainingResponseDTO, trainings);
