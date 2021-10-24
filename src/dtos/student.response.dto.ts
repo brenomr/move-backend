@@ -132,4 +132,11 @@ export class StudentToRelationResponseDTO {
   })
   @Expose()
   name: string;
+
+  @ApiProperty({
+    format: 'string',
+    example: 'Fernandes'
+  })
+  @Expose()
+  surname: string;
 }
