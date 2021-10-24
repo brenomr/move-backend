@@ -1,6 +1,6 @@
 import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Brackets, ILike, Not, Repository } from "typeorm";
+import { Brackets, Not, Repository } from "typeorm";
 import { StudentModel } from "../models/student.model";
 
 
@@ -52,27 +52,6 @@ export class StudentRepository {
         return { students: result[0], total: result[1] };
     } catch {
       throw new Error(`Wasn't possible to list students`);
-    }
-  }
-
-  async listByPersonal(
-    limit: number,
-    skip: number,
-    orderBy: string,
-    order: string,
-    personal: string,
-  ): Promise<{ students: StudentModel[], total: number }> {
-    try{
-
-      const result = await this.studentRepository
-        .createQueryBuilder('students')
-        .leftJoinAndSelect('students.personals', 'personal')
-        .where('personal.id = :id', { id: personal })
-        .getManyAndCount();
-
-      return { students: result[0], total: result[1] };
-    } catch {
-      throw new Error(`Wasn't possible to list students by personal`);
     }
   }
 
