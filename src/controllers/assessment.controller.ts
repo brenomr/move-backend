@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, Put, Query, HttpCode } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put, Query, HttpCode, Req } from '@nestjs/common';
 import { ApiCreatedResponse, ApiNoContentResponse, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
 import { Role } from 'src/auth/role.enum';
 import { Roles } from 'src/auth/roles.decorator';
@@ -7,6 +7,7 @@ import { AssessmentResponseDTO } from 'src/dtos/assessment.response.dto';
 import { AssessmentUpdateDTO } from 'src/dtos/assessment.update.dto';
 import { PaginationDTO } from 'src/dtos/pagination.dto';
 import { AssessmentService } from 'src/services/assessment.service';
+import { UserRequest } from 'src/utils/interfaces';
 
 
 @Controller('assessments')
@@ -46,11 +47,18 @@ export class AssessmentController {
     name: string,
     @Query('student_name')
     student_name: string,
+    @Req()
+    req: UserRequest,
   ) {
+    const user = req.user;
     return await this.assessmentService.findAll(
       pagination,
       name,
       student_name,
+      {
+        studentId: user.whois.includes('student') ? user.userId : undefined,
+        personalId: user.whois.includes('personal') ? user.userId : undefined,
+      }
     );
   }
 

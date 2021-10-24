@@ -27,6 +27,10 @@ export class AssessmentService {
     pagination: PaginationDTO,
     name: string,
     student_name: string,
+    {
+      studentId,
+      personalId,
+    }
   ) {
     
     const limit = Number(pagination.limit) > 10 ? 10 : Number(pagination.limit);
@@ -34,7 +38,7 @@ export class AssessmentService {
 
     const skip = (page - 1) * limit;
     const orderBy = pagination.orderBy ? pagination.orderBy : 'name';
-    const order = pagination.order.toLocaleUpperCase()
+    const order = (pagination.order.toUpperCase() === 'ASC') ? 'ASC' : 'DESC';
 
     const { assessments, total } = await this.assessmentRepository.findAll(
       limit,
@@ -43,6 +47,10 @@ export class AssessmentService {
       order,
       name,
       student_name,
+      {
+        studentId,
+        personalId,
+      }
     );
 
     const data = autoMapper(AssessmentResponseDTO, assessments);

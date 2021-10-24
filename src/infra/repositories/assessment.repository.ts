@@ -32,11 +32,17 @@ export class AssessmentRepository {
     order: string,
     name: string,
     student_name: string,
+    {
+      studentId,
+      personalId,
+    }
   ): Promise<{ assessments: AssessmentModel[], total: number }> {
     try{
       const where = [];
 
       where.push({
+        ...(studentId ? { student: { id: studentId }} : {}),
+        ...(personalId ? { personal: { id: personalId }} : {}),
         ...(name ? { name: ILike(`%${name}%`) } : {}),
         ...(student_name ? { student: { name: ILike(`%${student_name}%`) } } : {}),
       });
