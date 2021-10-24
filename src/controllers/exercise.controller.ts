@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, Put, Query, HttpCode } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put, Query, HttpCode, Req } from '@nestjs/common';
 import { ApiCreatedResponse, ApiNoContentResponse, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
 import { Role } from 'src/auth/role.enum';
 import { Roles } from 'src/auth/roles.decorator';
@@ -7,6 +7,7 @@ import { ExerciseResponseDTO } from 'src/dtos/exercise.response.dto';
 import { ExerciseUpdateDTO } from 'src/dtos/exercise.update.dto';
 import { PaginationDTO } from 'src/dtos/pagination.dto';
 import { ExerciseService } from 'src/services/exercise.service';
+import { UserRequest } from 'src/utils/interfaces';
 
 
 @Controller('exercises')
@@ -52,13 +53,17 @@ export class ExerciseController {
     breaktime: string,
     @Query('activity')
     activity: string,
+    @Req()
+    req: UserRequest,
   ) {
+    const user = req.user;
     return await this.exerciseService.findAll(
       pagination,
       repetition,
       serie,
       breaktime,
       activity,
+      user.whois.includes('personal') ? user.userId : undefined,
     );
   }
 

@@ -29,6 +29,7 @@ export class ExerciseService {
     serie: string,
     breaktime: string,
     activity: string,
+    userId?: string,
   ) {
 
     const limit = Number(pagination.limit) > 10 ? 10 : Number(pagination.limit);
@@ -36,7 +37,7 @@ export class ExerciseService {
 
     const skip = (page - 1) * limit;
     const orderBy = pagination.orderBy ? pagination.orderBy : 'repetition';
-    const order = pagination.order.toLocaleUpperCase()
+    const order = (pagination.order.toUpperCase() === 'ASC') ? 'ASC' : 'DESC';
 
     const { exercises, total } = await this.exerciseRepository.findAll(
       limit,
@@ -47,6 +48,7 @@ export class ExerciseService {
       serie,
       breaktime,
       activity,
+      userId,
     );
 
     const data = autoMapper(ExerciseResponseDTO, exercises);
