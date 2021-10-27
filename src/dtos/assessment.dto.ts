@@ -1,8 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Expose, Type } from 'class-transformer';
-import { IsBoolean, IsNotEmpty, IsOptional, IsString, IsUUID, MaxLength } from 'class-validator';
-import { StudentToRelationDTO } from './student.dto';
-import { UserDTO, UserToRelationDTO } from './user.dto';
+import { Expose } from 'class-transformer';
+import { IsBase64, IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
 
 export class AssessmentDTO {
 
@@ -31,31 +29,27 @@ export class AssessmentDTO {
   @ApiProperty({
     required: false,
     type: 'string',
-    example: 'https://attachedfile.net.example/dfaoj3fad0jpo23jlasphoto2'
   })
   @IsOptional()
-  @IsString()
-  @MaxLength(300)
+  @IsBase64()
   @Expose()
   attached_url: string;
 
   @ApiProperty({
     required: true,
-    type: UserToRelationDTO,
-    example: { 'id': 'a4db6f33-5d2e-40fe-8a05-c989a4c38541' }
+    type: 'string',
+    example: "{ 'id': '77d04f2c-fde5-42f5-8ca1-7178bb4aca15' }"
   })
   @IsNotEmpty()
-  @Type(() => UserToRelationDTO)
   @Expose()
-  personal: UserToRelationDTO;
+  personal: string;
 
   @ApiProperty({
     required: true,
-    type: StudentToRelationDTO,
-    example: { 'id': 'a4db6f33-5d2e-40fe-8a05-c989a4c38541' }
+    type: 'string',
+    example: "{ 'id': '77d04f2c-fde5-42f5-8ca1-7178bb4aca15' }"
   })
   @IsNotEmpty()
-  @Type(() => StudentToRelationDTO)
   @Expose()
-  student: StudentToRelationDTO;
+  student: string;
 }
