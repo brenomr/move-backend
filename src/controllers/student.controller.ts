@@ -124,7 +124,7 @@ export class StudentController {
     fileFilter: photoChecker,
     limits: maxPhotoSize,
   }))
-  @Roles(Role.Admin, Role.Personal)
+  @Roles(Role.Admin, Role.Personal, Role.Student)
   @HttpCode(200)
   async profileUpdate(
     @Param('id') id: string,
