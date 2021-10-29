@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Type } from 'class-transformer';
-import { IsNotEmpty, IsString, IsUUID, MaxLength } from 'class-validator';
+import { IsBase64, IsNotEmpty, IsOptional, IsString, IsUUID, MaxLength } from 'class-validator';
 import { UserToRelationDTO } from './user.dto';
 
 export class ActivityDTO {
@@ -29,24 +29,22 @@ export class ActivityDTO {
 
   @ApiProperty({
     required: false,
-    type: 'string',
-    example: 'https://treinosimages.net.example/dfaoj3fad0jpo23jlasimg22'
+    type: 'string'
   })
-  @IsNotEmpty()
-  @IsString()
+  @IsOptional()
+  @IsBase64()
   @MaxLength(300)
   @Expose()
   image_url: string;
 
   @ApiProperty({
     required: true,
-    type: UserToRelationDTO,
-    example: { 'id': '77d04f2c-fde5-42f5-8ca1-7178bb4aca15' }
+    type: 'string',
+    example: "{ 'id': '77d04f2c-fde5-42f5-8ca1-7178bb4aca15' }"
   })
   @IsNotEmpty()
-  @Type(() => UserToRelationDTO)
   @Expose()
-  user: UserToRelationDTO;
+  user: string;
 }
 
 export class ActivityToRelationDTO {

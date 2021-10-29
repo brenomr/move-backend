@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, Put, Query, HttpCode } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put, Query, HttpCode, Req } from '@nestjs/common';
 import { ApiCreatedResponse, ApiNoContentResponse, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
 import { Role } from 'src/auth/role.enum';
 import { Roles } from 'src/auth/roles.decorator';
@@ -7,6 +7,7 @@ import { CourseResponseDTO } from 'src/dtos/course.response.dto';
 import { CourseUpdateDTO } from 'src/dtos/course.update.dto';
 import { PaginationDTO } from 'src/dtos/pagination.dto';
 import { CourseService } from 'src/services/course.service';
+import { UserRequest } from 'src/utils/interfaces';
 
 
 
@@ -58,16 +59,28 @@ export class CourseController {
     student_name: string,
     @Query('training_title')
     training_title: string,
+    @Req()
+    req: UserRequest,
   ) {
-    return await this.courseService.findAll(
-      pagination,
-      description,
-      startDate,
-      endDate,
-      student,
-      student_name,
-      training_title,
-    );
+    const user = req.user;
+
+    if(user.whois.includes('personal')) {
+      return await this.courseService.listByPersonal(
+        pagination,
+        user.userId,
+      );
+    }
+    else {
+      return await this.courseService.findAll(
+        pagination,
+        description,
+        startDate,
+        endDate,
+        student,
+        student_name,
+        training_title,
+      );
+    }
   }
 
   @ApiOkResponse({

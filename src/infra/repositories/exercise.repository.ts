@@ -34,11 +34,13 @@ export class ExerciseRepository {
     serie: string,
     breaktime: string,
     activity: string,
+    userId?: string,
   ): Promise<{ exercises: ExerciseModel[], total: number }> {
     try{
       const where = [];
 
       where.push({
+        ...(userId ? { personal: { id: userId } } : {}),
         ...(repetition ? { repetition: ILike(`%${repetition}%`) } : {}),
         ...(serie ? { serie: ILike(`%${serie}%`) } : {}),
         ...(breaktime ? { breaktime: ILike(`%${breaktime}%`) } : {}),

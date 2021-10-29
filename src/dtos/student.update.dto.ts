@@ -156,13 +156,8 @@ export class StudentUpdateDTO {
 
   @ApiProperty({
     required: false,
-    type: 'string',
-    example: 'https://anyphoto.net.example/dfaoj3fad0jpo23jlasphoto2'
   })
-  @IsOptional()
-  @IsString()
-  @MaxLength(300)
-  @Expose()
+  @Exclude()
   photo_url: string;
 
   @ApiProperty({
@@ -178,14 +173,10 @@ export class StudentUpdateDTO {
 
   @ApiProperty({
     required: true,
-    type: [UserToRelationDTO],
-    example: [
-      { 'id': '77d04f2c-fde5-42f5-8ca1-7178bb4aca15' },
-      { 'id': 'a4db6f33-5d2e-40fe-8a05-c989a4c38541' }
-    ]
+    type: 'string',
+    example: "[{ 'id': '77d04f2c-fde5-42f5-8ca1-7178bb4aca15' }]"
   })
   @IsNotEmpty()
-  @Type(() => UserToRelationDTO)
   @Expose()
-  personals: UserToRelationDTO[];
+  personals: string;
 }

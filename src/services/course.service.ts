@@ -57,6 +57,31 @@ export class CourseService {
     return { data, total };
   }
 
+  async listByPersonal(
+    pagination: PaginationDTO,
+    user: string,
+  ) {
+    
+    const limit = Number(pagination.limit) > 10 ? 10 : Number(pagination.limit);
+    const page = Number(pagination.page)
+
+    const skip = (page - 1) * limit;
+    const orderBy = pagination.orderBy ? pagination.orderBy : 'student';
+    const order = (pagination.order.toUpperCase() === 'ASC') ? 'ASC' : 'DESC';
+
+    const { courses, total } = await this.courseRepository.listByPersonal(
+      limit,
+      skip,
+      orderBy,
+      order,
+      user,
+    );
+
+    const data = autoMapper(CourseResponseDTO, courses);
+    
+    return { data, total };
+  }
+
   async findOne(id: string) {
     const course = await this.courseRepository.findOne(id);
     return autoMapper(CourseResponseDTO, course);

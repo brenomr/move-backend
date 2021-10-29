@@ -6,6 +6,8 @@ import { PaginationDTO } from 'src/dtos/pagination.dto';
 import { ActivityModel } from 'src/infra/models/activity.model';
 import { ActivityRepository } from 'src/infra/repositories/activity.repository';
 import { autoMapper } from 'src/utils/autoMapper';
+import { S3 } from 'aws-sdk';
+import { v4 as uuid } from 'uuid';
 
 
 @Injectable()
@@ -15,7 +17,25 @@ export class ActivityService {
     private readonly activityRepositoty: ActivityRepository
   ) {}
 
+  async uploadFile(dataBuffer: Buffer, fileName: string): Promise<string> {
+    try {
+      const s3 = new S3();
+
+      const uploadResult = await s3.upload({
+        Bucket: process.env.AWS_PUBLIC_BUCKET_NAME,
+        Body: dataBuffer,
+        Key: `activities/image-${uuid()}-${fileName}`,
+        ContentType: 'image/jpeg'
+      }).promise();
+
+      return uploadResult.Location;
+    } catch(err) {
+      throw new Error(`Something went wrong trying to upload the image`);
+    }
+  }
+
   async create(activityDTO: ActivityDTO) {
+    activityDTO.user = JSON.parse(activityDTO.user);
     const newActivity = autoMapper(ActivityModel, activityDTO, false);
     
     const savedActivity = await this.activityRepositoty.create(newActivity);
@@ -56,7 +76,13 @@ export class ActivityService {
   }
 
   async update(id: string, activityUpdateDTO: ActivityUpdateDTO) {
-    await this.findOne(id);
+    const activityFound = await this.findOne(id);
+    
+    activityUpdateDTO.user = JSON.parse(activityUpdateDTO.user);
+
+    if(!activityUpdateDTO.image_url) {
+      activityUpdateDTO.image_url = activityFound.image_url;
+    }
 
     const activityToUpdate = autoMapper(ActivityModel, activityUpdateDTO, false);
 

@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Type } from 'class-transformer';
-import { StudentResponseDTO } from './student.response.dto';
-import { TrainingResponseDTO } from './training.response.dto';
+import { StudentToRelationResponseDTO } from './student.response.dto';
+import { TrainingToRelationResponseDTO } from './training.response.dto';
 
 export class CourseResponseDTO {
 
@@ -34,16 +34,16 @@ export class CourseResponseDTO {
   endDate: Date;
 
   @ApiProperty({
-    type: StudentResponseDTO,
+    type: StudentToRelationResponseDTO,
   })
   @Expose()
-  @Type(() => StudentResponseDTO)
-  student: StudentResponseDTO;
+  @Type(() => StudentToRelationResponseDTO)
+  student: StudentToRelationResponseDTO;
 
   @ApiProperty({
-    type: TrainingResponseDTO,
+    type: TrainingToRelationResponseDTO,
   })
   @Expose()
-  @Type(() => TrainingResponseDTO)
-  training: TrainingResponseDTO;
+  @Type(() => TrainingToRelationResponseDTO)
+  training: TrainingToRelationResponseDTO;
 }

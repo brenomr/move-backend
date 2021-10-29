@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, Put, Query, HttpCode } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put, Query, HttpCode, Req } from '@nestjs/common';
 import { ApiCreatedResponse, ApiNoContentResponse, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
 import { Role } from 'src/auth/role.enum';
 import { Roles } from 'src/auth/roles.decorator';
@@ -7,6 +7,7 @@ import { TrainingDTO } from 'src/dtos/training.dto';
 import { TrainingResponseDTO } from 'src/dtos/training.response.dto';
 import { TrainingUpdateDTO } from 'src/dtos/training.update.dto';
 import { TrainingService } from 'src/services/training.service';
+import { UserRequest } from 'src/utils/interfaces';
 
 
 @Controller('trainings')
@@ -49,12 +50,16 @@ export class TrainingController {
     description: string,
     @Query('personal_name')
     personal_name: string,
+    @Req()
+    req: UserRequest,
   ) {
+    const user = req.user;
     return await this.trainingService.findAll(
       pagination,
       title,
       description,
       personal_name,
+      user.whois.includes('personal') ? user.userId : undefined,
     );
   }
 

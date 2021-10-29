@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
-import { IsNotEmpty, IsUUID } from 'class-validator';
+import { IsBase64, IsNotEmpty, IsOptional, IsUUID } from 'class-validator';
 import { ActivityDTO } from './activity.dto';
 
 export class ActivityUpdateDTO extends ActivityDTO {
@@ -14,4 +14,14 @@ export class ActivityUpdateDTO extends ActivityDTO {
   @IsUUID()
   @Expose()
   id: string;
+
+  @ApiProperty({
+    required: false,
+    type: 'string',
+    format: 'base64',
+  })
+  @IsOptional()
+  @IsBase64()
+  @Expose()
+  image_url: string;
 }

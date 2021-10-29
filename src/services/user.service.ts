@@ -7,7 +7,9 @@ import { UserUpdateDTO } from 'src/dtos/user.update.dto';
 import { UserModel } from 'src/infra/models/user.model';
 import { UserRepository } from 'src/infra/repositories/user.repository';
 import { autoMapper } from 'src/utils/autoMapper';
-
+import { S3 } from 'aws-sdk';
+import { v4 as uuid } from 'uuid';
+import { ProfileUpdateDTO } from 'src/dtos/profile.update.dto';
 
 @Injectable()
 export class UserService {
@@ -30,10 +32,24 @@ export class UserService {
     }
   }
 
-  async create(userDTO: UserDTO) {
-    await this.checkCref(userDTO.cref);
-    await this.checkEmail(userDTO.email);
+  async uploadFile(dataBuffer: Buffer, fileName: string): Promise<string> {
+    try {
+      const s3 = new S3();
 
+      const uploadResult = await s3.upload({
+        Bucket: process.env.AWS_PUBLIC_BUCKET_NAME,
+        Body: dataBuffer,
+        Key: `photo/avatar-${uuid()}-${fileName}`,
+        ContentType: 'image/jpeg'
+      }).promise();
+
+      return uploadResult.Location;
+    } catch(err) {
+      throw new Error(`Something went wrong trying to upload the photo`);
+    }
+  }
+
+  async create(userDTO: UserDTO) {
     userDTO.password = await hash(userDTO.password, 8);
 
     const newUser = autoMapper(UserModel, userDTO, false);
@@ -90,7 +106,31 @@ export class UserService {
 
     const updatedUser = await this.userRepository.update(id, userToUpdate);
 
-    return autoMapper(UserResponseDTO, updatedUser);;
+    return autoMapper(UserResponseDTO, updatedUser);
+  }
+
+  async profileUpdate(
+    id: string,
+    profileUpdate: ProfileUpdateDTO,
+    buffer?: Buffer,
+    originalname?: string
+    ) {
+
+    const user = await this.findOne(id);
+
+    if (buffer && originalname) {
+      user.photo_url = await this.uploadFile(buffer, originalname);
+    }
+
+    if(profileUpdate.nickname) {
+      user.nickname = profileUpdate.nickname;
+    }
+
+    const userToUpdate = autoMapper(UserModel, user, false);
+
+    const updatedUser = await this.userRepository.update(id, userToUpdate);
+
+    return autoMapper(UserResponseDTO, updatedUser);
   }
 
   async remove(id: string) {

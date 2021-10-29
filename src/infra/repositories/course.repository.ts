@@ -64,6 +64,38 @@ export class CourseRepository {
     }
   }
 
+  async listByPersonal(
+    limit: number,
+    skip: number,
+    orderBy: string,
+    order: 'ASC' | 'DESC',
+    user: string,
+  ): Promise<{ courses: CourseModel[], total: number }> {
+    try{
+      const result = await this.courseRepository
+        .createQueryBuilder("courses")
+        .leftJoinAndSelect("courses.student", "student")
+        .leftJoinAndSelect("courses.training", "training")
+        .where(qb => {
+          const subQuery = qb.subQuery()
+            .select("spu.studentsId")
+            .from("students_personals_users", "spu")
+            .where("spu.usersId = :user")
+            .getQuery()
+          return "courses.studentId IN " + subQuery;
+        })
+        .setParameter("user", user)
+        .take(limit)
+        .skip(skip)
+        .orderBy(`courses.${orderBy}`, `${order}`)
+        .getManyAndCount();
+
+        return { courses: result[0], total: result[1] };
+    } catch {
+      throw new Error(`Wasn't possible to list training by personal`);
+    }
+  }
+
   async findOne(id: string): Promise<CourseModel> {
     try{
       return await this.courseRepository.findOneOrFail(id, {

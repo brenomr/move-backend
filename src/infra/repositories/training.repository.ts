@@ -33,11 +33,13 @@ export class TrainingRepository {
     title: string,
     description: string,
     personal_name: string,
+    userId?: string,
   ): Promise<{ trainings: TrainingModel[], total: number }> {
     try{
       const where = [];
 
       where.push({
+        ...(userId ? { personal: { id: userId }} : {}),
         ...(title ? { title: ILike(`%${title}%`) } : {}),
         ...(description ? { description: ILike(`%${description}%`) } : {}),
         ...(personal_name ? { personal: { name: ILike(`%${personal_name}%`) } } : {}),

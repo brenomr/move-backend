@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
-import { IsBoolean, IsNotEmpty, IsOptional, IsString, IsUUID, MaxLength } from 'class-validator';
+import { IsBase64, IsNotEmpty, IsOptional, IsString, IsUUID, MaxLength } from 'class-validator';
 
 export class UserDTO {
 
@@ -160,11 +160,10 @@ export class UserDTO {
 
   @ApiProperty({
     required: false,
-    type: 'string',
-    example: 'https://anyphoto.net.example/dfaoj3fad0jpo23jlasphoto2'
+    type: 'string'
   })
   @IsOptional()
-  @IsString()
+  @IsBase64()
   @MaxLength(300)
   @Expose()
   photo_url: string;

@@ -115,3 +115,20 @@ export class UserResponseDTO {
   @Expose()
   nickname: string;
 }
+
+export class UserToRelationResponseDTO {
+
+  @ApiProperty({
+    format: 'uuid',
+    example: 'd0fa98cb-d225-4ef3-bc32-c39c7be56fb1'
+  })
+  @Expose()
+  id: string;
+
+  @ApiProperty({
+    format: 'string',
+    example: 'Rafaela'
+  })
+  @Expose()
+  name: string;
+}

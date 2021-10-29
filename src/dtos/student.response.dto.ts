@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Type } from 'class-transformer';
-import { UserResponseDTO } from './user.response.dto';
+import { UserToRelationResponseDTO } from './user.response.dto';
 
 export class StudentResponseDTO {
 
@@ -110,9 +110,33 @@ export class StudentResponseDTO {
   nickname: string;
 
   @ApiProperty({
-    type: [UserResponseDTO],
+    type: [UserToRelationResponseDTO],
   })
   @Expose()
-  @Type(() => UserResponseDTO)
-  personals: UserResponseDTO[];
+  @Type(() => UserToRelationResponseDTO)
+  personals: UserToRelationResponseDTO[];
+}
+
+export class StudentToRelationResponseDTO {
+
+  @ApiProperty({
+    format: 'uuid',
+    example: 'bc637731-ae16-48d0-80e3-1859a37959dc'
+  })
+  @Expose()
+  id: string;
+
+  @ApiProperty({
+    format: 'string',
+    example: 'Marcelo'
+  })
+  @Expose()
+  name: string;
+
+  @ApiProperty({
+    format: 'string',
+    example: 'Fernandes'
+  })
+  @Expose()
+  surname: string;
 }

@@ -1,12 +1,11 @@
 import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { ILike, Not, Repository } from "typeorm";
+import { Brackets, Not, Repository } from "typeorm";
 import { StudentModel } from "../models/student.model";
 
 
 @Injectable()
 export class StudentRepository {
-
   constructor(
     @InjectRepository(StudentModel)
     private studentRepository: Repository<StudentModel>
@@ -29,29 +28,28 @@ export class StudentRepository {
     limit: number,
     skip: number,
     orderBy: string,
-    order: string,
+    order: 'ASC' | 'DESC',
     name: string,
     email: string,
     phone: string,
+    userId?: string,
   ): Promise<{ students: StudentModel[], total: number }> {
     try{
-      const where = [];
+      const result = await this.studentRepository
+        .createQueryBuilder("students")
+        .leftJoinAndSelect("students.personals", "personal")
+        .where(new Brackets( qb => {
+          userId ? qb.where("personal.id = :userId", { userId }) : {},
+          name ? qb.andWhere("students.name ILIKE :name", { name: `%${name}%` }) : {},
+          email ? qb.andWhere("students.email ILIKE :email", { email: `%${email}%` }) : {},
+          phone ? qb.andWhere("students.phone ILIKE :phone", { phone: `%${phone}%` }) : {}
+        }))
+        .take(limit)
+        .skip(skip)
+        .orderBy(`students.${orderBy}`, `${order}`)
+        .getManyAndCount();
 
-      where.push({
-        ...(name ? { name: ILike(`%${name}%`) } : {}),
-        ...(email ? { email: ILike(`%${email}%`) } : {}),
-        ...(phone ? { phone: ILike(`%${phone}%`) } : {}),
-      });
-
-      const result = await this.studentRepository.findAndCount({
-        take: limit,
-        skip,
-        order: {
-          [orderBy]: order
-        },
-        where,
-      });
-      return { students: result[0], total: result[1] };
+        return { students: result[0], total: result[1] };
     } catch {
       throw new Error(`Wasn't possible to list students`);
     }
