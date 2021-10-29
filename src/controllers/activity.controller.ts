@@ -34,7 +34,7 @@ export class ActivityController {
     @Body() activityDTO: ActivityDTO,
     @UploadedFile() file: Express.Multer.File
   ) {
-
+    
     if (req.fileValidationError) {
       throw new UnsupportedMediaTypeException(`Invalid file type, ${req.fileValidationError}`);
     }
@@ -43,6 +43,9 @@ export class ActivityController {
       const { buffer, originalname } = file;
 
       activityDTO.image_url = await this.activityService.uploadFile(buffer, originalname);
+    }
+    else {
+      activityDTO.image_url = process.env.DEFAULT_ACTIVITY;
     }
     return await this.activityService.create(activityDTO);
   }
