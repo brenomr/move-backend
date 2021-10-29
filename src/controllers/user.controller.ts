@@ -47,6 +47,10 @@ export class UserController {
 
       userDTO.photo_url = await this.userService.uploadFile(buffer, originalname);
     }
+    else {
+      userDTO.photo_url = process.env.DEFAULT_AVATAR;
+    }
+    
     return await this.userService.create(userDTO);
   }
 
