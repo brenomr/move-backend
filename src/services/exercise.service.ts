@@ -32,7 +32,8 @@ export class ExerciseService {
     userId?: string,
   ) {
 
-    const limit = Number(pagination.limit) > 10 ? 10 : Number(pagination.limit);
+    // const limit = Number(pagination.limit) > 10 ? 10 : Number(pagination.limit);
+    const limit = 200;
     const page = Number(pagination.page)
 
     const skip = (page - 1) * limit;
