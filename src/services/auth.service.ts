@@ -8,6 +8,7 @@ interface User {
   id: string,
   name: string,
   whois: string,
+  avatar: string,
 }
 
 @Injectable()
@@ -21,7 +22,7 @@ export class AuthService {
 
 
   async validateUser(tag: string, email: string, password: string): Promise<any> {
-    const user: User = {id: '', name: '', whois: ''};
+    const user: User = {id: '', name: '', whois: '', avatar: ''};
     let result: any;
 
     if(tag === 'student') {
@@ -43,12 +44,13 @@ export class AuthService {
     user.id = result.id;
     user.name = result.name;
     user.whois = result.whois;
+    user.avatar = result.photo_url;
 
     return user;
   }
 
   async login(user: any){
-    const payload = { username: user.name, sub: user.id, whois: user.whois };
+    const payload = { username: user.name, sub: user.id, whois: user.whois, avatar: user.avatar };
     return {
       access_token: this.jwtService.sign(payload),
     }
